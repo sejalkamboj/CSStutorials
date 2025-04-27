@@ -28,7 +28,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            bat 'docker ps -aq --filter "name=my-website-container" | for /F "tokens=*" %i in (\'more\') do docker rm -f %i'
+            
         }
     }
 }
