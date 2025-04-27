@@ -21,17 +21,24 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 echo 'Running Docker container...'
-                // First, remove the old container if it exists
                 bat 'docker rm -f my-website-container || exit 0'
-                // Then, run a fresh container
                 bat 'docker run -d -p 8080:80 --name my-website-container %DOCKER_IMAGE%'
+            }
+        }
+        stage('Test Website') {
+            steps {
+                echo 'Testing if website is live...'
+                bat '''
+                curl -s http://localhost:8080 > nul
+                if %errorlevel% neq 0 exit 1
+                '''
             }
         }
     }
     post {
         always {
             echo 'Cleaning up...'
-            // (You can optionally clean dangling images or stopped containers here too)
+            // Optional: Clean up things
         }
     }
 }
